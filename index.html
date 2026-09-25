@@ -275,8 +275,56 @@
 </section>
 
 <!-- ============ MANIFESTO ============ -->
-<section class="manifesto" aria-label="Why Atlas">
-  <p class="manifesto__text">Most business owners don’t have a marketing problem. They have an everything-runs-through-me problem. The posts, the website, the replies, the admin: all of it sits on your shoulders. Atlas builds it into one system that carries the weight, even when you step away.</p>
+<!-- The load: tasks pile up on "You", then Atlas carries them as one system.
+     Without JS or with reduced motion, it shows the final, organised state. -->
+<section class="load" aria-labelledby="load-title">
+  <div class="load__stage">
+    <div class="load__inner">
+      <div class="load__copy">
+        <h2 class="vh" id="load-title">Why Atlas</h2>
+        <p class="load__line"><span class="load__big">Most business owners don’t have a marketing problem.</span></p>
+        <p class="load__line"><span class="load__big">They have an everything-runs-through-me problem.</span><span class="load__sub">The posts, the website, the replies, the admin: all of it sits on your shoulders.</span></p>
+        <p class="load__line"><span class="load__big">Atlas builds it into one system that carries the weight, even when you step away.</span></p>
+      </div>
+
+      <div class="load__scene" aria-hidden="true">
+        <svg class="load__spokes" viewBox="-50 -50 100 100" preserveAspectRatio="none">
+          <line x1="0" y1="-9.52" x2="0" y2="-21.08" pathLength="1"/>
+          <line x1="7.13" y1="-6.73" x2="15.78" y2="-14.91" pathLength="1"/>
+          <line x1="10.08" y1="0" x2="22.32" y2="0" pathLength="1"/>
+          <line x1="7.13" y1="6.73" x2="15.78" y2="14.91" pathLength="1"/>
+          <line x1="0" y1="9.52" x2="0" y2="21.08" pathLength="1"/>
+          <line x1="-7.13" y1="6.73" x2="-15.78" y2="14.91" pathLength="1"/>
+          <line x1="-10.08" y1="0" x2="-22.32" y2="0" pathLength="1"/>
+          <line x1="-7.13" y1="-6.73" x2="-15.78" y2="-14.91" pathLength="1"/>
+        </svg>
+
+        <div class="load__mark">
+          <svg class="mark" viewBox="0 0 246 355">
+            <polygon fill="#0389A6" points="123,0 0,71 0,214 123,284 123,212 62,177 62,107 123,71"/>
+            <polygon fill="#04D8D9" points="123,355 246,284 246,141 123,71 123,143 184,178 184,248 123,284"/>
+            <polygon fill="#04D8D9" points="162,22 208,49 208,102 162,75"/>
+          </svg>
+        </div>
+
+        <ul class="load__chips">
+          <li class="chip" style="--a:-90deg"><svg class="chip__icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>Posts<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:-45deg"><svg class="chip__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Website<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:0deg"><svg class="chip__icon" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Replies<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:45deg"><svg class="chip__icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Bookings<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:90deg"><svg class="chip__icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Quotes<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:135deg"><svg class="chip__icon" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 17.5v-11"/></svg>Invoices<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:180deg"><svg class="chip__icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></svg>Follow-ups<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+          <li class="chip" style="--a:225deg"><svg class="chip__icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Reviews<svg class="chip__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></li>
+        </ul>
+
+        <div class="load__you">
+          <span class="load__you-bar"></span>
+          <span class="load__you-label"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>You</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ============ SERVICES ============ -->

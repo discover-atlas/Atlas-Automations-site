@@ -25,7 +25,7 @@ Then open http://localhost:8090. Use the server rather than double-clicking `ind
 
 1. **Hero**: "Seen. Found. Handled." The logo assembles on load. As you scroll, it opens like a pair of doors.
 2. **Story** (`#story`): one customer, one morning, told in four timestamps. The phone swaps screens as each chapter reaches the middle of the screen.
-3. **Manifesto**: the words light up as you read.
+3. **The load** (why Atlas): a scroll scene on the original dark cyan. Task cards pile up on a "You" bar, the tower wobbles, then the Atlas mark appears and the cards fly into an organised ring around it while "You" steps away.
 4. **Services** (`#services`): animated content, then web design and SEO, then automation. Each has its own visual.
 5. **Case study** (`#work`): VSI Accountants in a sideways reel. It's pinned on desktop and swipes on phones.
 6. **Process** (`#process`) and **FAQ** (`#faq`): the light section.
@@ -44,11 +44,12 @@ text with the brand teal, and the whole page read as one flat cyan.
 --petrol      #0389A6   logo, left half (sampled from Atlas logo.jpeg)
 --signal      #04D8D9   logo, right half: buttons, links, the manifesto field
 --petrol-deep #026A80   the process section field
+--deep        #041419   the original dark cyan: "the load" scene and the Web design & SEO band
 --daylight    #FFFFFF   white fields: services, FAQ
 ```
 
-Page rhythm: charcoal (hero, story) → teal (manifesto) → white (services)
-→ charcoal (work) → petrol (process) → white (FAQ) → charcoal (finale).
+Page rhythm: charcoal (hero, story) → dark cyan (the load) → white / dark cyan /
+white (services) → charcoal (work) → petrol (process) → white (FAQ) → charcoal (finale).
 
 The previous teal-and-orange "film grade" version is commit `09abb92` if you
 ever want it back: `git checkout 09abb92 -- assets/css/atlas.css`.

@@ -15,6 +15,9 @@
   --petrol: #0389a6;       /* logo, left half */
   --signal: #04d8d9;       /* logo, right half */
   --petrol-deep: #026a80;  /* the process section field (white text 6.2:1) */
+  --deep: #041419;         /* the original dark cyan: "the load" scene + web band */
+  --deep-text: #e6f5f4;    /* text on deep (16.7:1) */
+  --deep-muted: #8fb0b3;   /* secondary text on deep (8:1) */
   --foam: #f5f5f5;         /* text on dark (16.8:1) */
   --haze: #a3a3a3;         /* secondary text on dark (7.2:1) */
   --line: rgba(255, 255, 255, 0.12);
@@ -571,14 +574,105 @@ body::after {
 }
 
 /* ==========================================================================
-   Manifesto
+   The load: tasks pile onto "You", then Atlas carries them as one system.
+   Default styles are the final, organised state (no JS / reduced motion).
+   .load--animate (added by main.js) turns it into a sticky scroll scene.
    ========================================================================== */
-.manifesto { padding: var(--section) var(--gutter); background: var(--signal); color: var(--ink); }
-.manifesto ::selection { background: var(--ink); color: var(--signal); }
-.manifesto__text {
-  max-width: 1120px; margin-inline: auto;
-  font-size: clamp(1.75rem, 0.9rem + 3.2vw, 4rem); line-height: 1.1;
-  font-weight: 680; font-stretch: 112%; letter-spacing: -0.025em; text-wrap: pretty;
+.load { position: relative; background: var(--deep); color: var(--deep-text); }
+.load__stage {
+  position: relative; isolation: isolate; overflow: hidden;
+  background:
+    radial-gradient(38% 50% at 66% 52%, rgba(3, 137, 166, 0.32), transparent 70%),
+    radial-gradient(22% 30% at 66% 52%, rgba(4, 216, 217, 0.12), transparent 70%);
+}
+/* the same isometric lattice as the hero, very faint */
+.load__stage::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image:
+    repeating-linear-gradient(30deg, rgba(143, 176, 179, 0.06) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(150deg, rgba(143, 176, 179, 0.06) 0 1px, transparent 1px 72px);
+  -webkit-mask-image: radial-gradient(55% 65% at 66% 50%, #000 10%, transparent 75%);
+  mask-image: radial-gradient(55% 65% at 66% 50%, #000 10%, transparent 75%);
+}
+.load__inner {
+  display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: center; gap: var(--s6);
+  width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; padding-block: var(--section);
+}
+.load__line + .load__line { margin-top: var(--s5); }
+.load__big {
+  display: block; max-width: 14em;
+  font-size: clamp(1.9rem, 0.9rem + 2.8vw, 3.4rem); line-height: 1.02;
+  font-weight: 760; font-stretch: 118%; letter-spacing: -0.03em; text-wrap: balance;
+}
+.load__sub { display: block; margin-top: var(--s3); max-width: 26em; font-size: var(--t-lead); line-height: 1.45; color: var(--deep-muted); }
+
+.load__scene {
+  position: relative; justify-self: center; width: min(100%, 580px); aspect-ratio: 1;
+  container-type: size;
+  --rx: 0.36; --ry: 0.34;   /* ring radius as a fraction of the scene; main.js reads these too */
+}
+.load__spokes { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.load__spokes line {
+  /* the scene is square, so user units scale evenly: 0.28 units ≈ 1.5px at 560px */
+  stroke: var(--signal); stroke-width: 0.28; opacity: 0.55;
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+}
+.load__mark {
+  position: absolute; left: 50%; top: 50%; width: 15cqw; translate: -50% -50%;
+  filter: drop-shadow(0 0 28px rgba(4, 216, 217, 0.35));
+}
+.load__mark .mark { width: 100%; height: auto; }
+.load__chips { position: absolute; inset: 0; }
+/* Chips sit on an ellipse around the mark (CSS trig), centred via `translate`
+   so GSAP's transform can move them freely */
+.chip {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+  transform: translate(calc(cos(var(--a)) * var(--rx) * 100cqw), calc(sin(var(--a)) * var(--ry) * 100cqh));
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px 8px 10px;
+  border: 1px solid var(--signal); border-radius: 10px;
+  background: rgba(4, 216, 217, 0.1); color: var(--deep-text);
+  font-size: 0.9375rem; font-weight: 650; font-stretch: 108%; line-height: 1; white-space: nowrap;
+  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.7);
+}
+.chip svg { flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chip__icon { width: 18px; height: 18px; }
+.chip__check { width: 16px; height: 16px; color: var(--signal); stroke-width: 3; }
+.load__you {
+  display: none; position: absolute; left: 50%; bottom: 3%; translate: -50% 0;
+  flex-direction: column; align-items: center; gap: 10px;
+  color: var(--deep-muted); font-size: var(--t-sm); font-weight: 600;
+}
+.load__you-bar { width: 44cqw; height: 6px; border-radius: 3px; background: var(--deep-text); }
+.load__you-label { display: flex; align-items: center; gap: 6px; }
+.load__you-label svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* Scroll scene */
+.load--animate { height: 320vh; height: 320svh; }
+.load--animate .load__stage { position: sticky; top: 0; height: 100vh; height: 100svh; }
+.load--animate .load__inner { height: 100%; padding-block: 72px var(--s5); }
+.load--animate .load__copy { display: grid; }
+.load--animate .load__line { grid-area: 1 / 1; margin: 0; align-self: center; }
+/* GSAP owns centring here (xPercent/yPercent), so the CSS translate is switched off */
+.load--animate .chip, .load--animate .load__mark, .load--animate .load__you { translate: none; }
+.load--animate .chip { transform: none; background: #e6f5f4; color: #041419; border-color: rgba(4, 216, 217, 0); }
+.load--animate .chip__check { opacity: 0; }
+.load--animate .load__spokes line { stroke-dashoffset: 1; }
+.load--animate .load__you { display: flex; }
+
+@media (max-width: 900px) {
+  .load__inner { grid-template-columns: 1fr; gap: var(--s4); }
+  .load--animate .load__inner { align-content: center; padding-block: 64px var(--s3); }
+  .load__scene { width: min(100%, 46vh); width: min(100%, 46svh); --rx: 0.29; --ry: 0.36; }
+  .load__spokes { transform: scale(0.8, 1.06); }   /* follow the narrower ring */
+}
+@media (max-width: 360px) {
+  .load__scene { --rx: 0.26; }
+  .load__spokes { transform: scale(0.72, 1.06); }
+  .load__big { font-size: clamp(1.55rem, 1rem + 3vw, 2.25rem); }
+  .load__sub { font-size: 1rem; margin-top: var(--s2); }
+  .chip { gap: 6px; padding: 6px 9px 6px 8px; font-size: 0.8125rem; border-radius: 8px; }
+  .chip__icon { width: 14px; height: 14px; }
+  .chip__check { width: 13px; height: 13px; }
 }
 
 /* ==========================================================================
@@ -595,6 +689,25 @@ body::after {
 .services .video-toggle:hover { color: var(--ink); }
 .services .phone { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 40px 80px -30px rgba(21, 21, 21, 0.45); }
 .services .browser { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 40px 90px -30px rgba(21, 21, 21, 0.35); }
+
+/* Web design & SEO: a full-width dark-cyan band between the two white blocks */
+.services .service--web {
+  position: relative; isolation: isolate; border-top: 0; clip-path: inset(0 -100vmax);
+  color: var(--deep-text); color-scheme: dark;
+  --haze: var(--deep-muted); --line: rgba(143, 176, 179, 0.18);
+}
+.services .service--web::before {
+  content: ""; position: absolute; z-index: -1; inset: 0 calc(50% - 50vw);
+  background:
+    radial-gradient(34% 62% at 30% 50%, rgba(3, 137, 166, 0.34), transparent 70%),
+    var(--deep);
+}
+.services .service--web + .service { border-top: 0; }
+.services .service--web :focus-visible { outline-color: var(--signal); }
+.services .service--web .service__list li::before { background: var(--signal); }
+.services .service--web .browser {
+  box-shadow: 0 0 0 1px rgba(230, 245, 244, 0.12), 0 60px 110px -40px rgba(0, 0, 0, 0.85), 0 0 160px -40px rgba(4, 216, 217, 0.45);
+}
 .section-head {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s3);
   align-items: end; padding-bottom: var(--s7);

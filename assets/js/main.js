@@ -241,7 +241,7 @@
     buildPointer();
     buildNavState();
     buildStoryScrub();
-    buildManifesto();
+    buildLoad();
     buildServices();
     buildWork(true);
     buildProcess();
@@ -354,14 +354,79 @@
     });
   }
 
-  /* ---------- Manifesto: words light up as you read ---------- */
-  function buildManifesto() {
-    if (!window.SplitText) return;
-    var split = SplitText.create(".manifesto__text", { type: "words" });
-    gsap.fromTo(split.words, { opacity: 0.14 }, {
-      opacity: 1, ease: "none", stagger: 0.1,
-      scrollTrigger: { trigger: ".manifesto__text", start: "top 78%", end: "bottom 45%", scrub: true }
+  /* ---------- The load: tasks pile onto "You", then Atlas carries them ----------
+     One scrubbed timeline over a tall section with a sticky stage:
+     0.00–0.38  eight task cards drop onto the "You" bar and stack up
+     0.38–0.60  "everything runs through me": the tower leans and wobbles
+     0.60–1.00  the mark appears, the cards fly into a ring around it,
+                turn teal with a tick, get wired to the mark, and You steps away */
+  function buildLoad() {
+    var load = $(".load");
+    if (!load) return;
+    load.classList.add("load--animate");
+
+    var scene = $(".load__scene", load);
+    var chips = $$(".chip", load);
+    var checks = $$(".chip__check", load);
+    var lines = $$(".load__line", load);
+    var spokes = $$(".load__spokes line", load);
+    var mark = $(".load__mark", load);
+    var you = $(".load__you", load);
+
+    var jitterX = [-6, 9, -12, 7, -4, 14, -9, 6];
+    var jitterR = [-3, 2, -4, 4, -2, 6, -5, 8];
+    var W = function () { return scene.clientWidth; };
+    var H = function () { return scene.clientHeight; };
+    var k = function () { return W() / 560; };
+    var chipH = function () { return chips[0].offsetHeight; };
+    // centre of card i when stacked on the bar (scene centre is 0,0)
+    var pileY = function (i) { return you.offsetTop - H() / 2 - chipH() / 2 - 3 - i * (chipH() + 3); };
+    var angle = function (el) { return parseFloat(el.style.getPropertyValue("--a")) * Math.PI / 180; };
+    var ring = function (prop) { return parseFloat(getComputedStyle(scene).getPropertyValue(prop)); };
+
+    // Centre with xPercent/yPercent, not the CSS `translate` property: GSAP folds
+    // that into its own transform and, after a refresh, re-reads it as pixels,
+    // which knocked some cards half their width off the ring.
+    gsap.set(chips, { xPercent: -50, yPercent: -50 });
+    gsap.set(mark, { xPercent: -50, yPercent: -50 });
+    gsap.set(you, { xPercent: -50 });
+
+    var tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: { trigger: load, start: "top top", end: "bottom bottom", scrub: 0.6, invalidateOnRefresh: true }
     });
+
+    // Act 1: the pile
+    chips.forEach(function (c, i) {
+      tl.fromTo(c,
+        { x: function () { return jitterX[i] * k(); }, y: function () { return pileY(i) - 260; }, rotation: 0, autoAlpha: 0 },
+        { y: function () { return pileY(i); }, rotation: jitterR[i], autoAlpha: 1, duration: 0.06, ease: "power2.in" },
+        0.03 + i * 0.04);
+    });
+    tl.fromTo(lines[1], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.41)
+      .fromTo(lines[2], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.64)
+      .fromTo(mark, { autoAlpha: 0, scale: 0.5 }, { autoAlpha: 1, scale: 1, duration: 0.08, ease: "back.out(1.7)" }, 0.74)
+      .to(lines[0], { autoAlpha: 0, y: -24, duration: 0.05 }, 0.37);
+
+    // Act 2: the wobble
+    tl.to(chips, {
+      x: function (i) { return jitterX[i] * 2.4 * k(); }, rotation: function (i) { return jitterR[i] * 2.2; },
+      duration: 0.12, ease: "sine.inOut"
+    }, 0.45)
+      .to(you, { y: 8, duration: 0.12, ease: "sine.inOut" }, 0.45)
+      .to(lines[1], { autoAlpha: 0, y: -24, duration: 0.05 }, 0.6);
+
+    // Act 3: Atlas carries it
+    tl.to(chips, {
+      x: function (i, el) { return Math.cos(angle(el)) * ring("--rx") * W(); },
+      y: function (i, el) { return Math.sin(angle(el)) * ring("--ry") * H(); },
+      rotation: 0, duration: 0.16, stagger: 0.012, ease: "power3.inOut"
+    }, 0.64)
+      .to(you, { x: function () { return W() * 0.55; }, autoAlpha: 0, duration: 0.1, ease: "power2.in" }, 0.7)
+      .to(chips, { backgroundColor: "rgba(4, 216, 217, 0.1)", color: "#e6f5f4", borderColor: "rgba(4, 216, 217, 1)", duration: 0.06, stagger: 0.012 }, 0.8)
+      .to(checks, { opacity: 1, duration: 0.05, stagger: 0.012 }, 0.82)
+      .to(spokes, { strokeDashoffset: 0, duration: 0.06, stagger: 0.01 }, 0.86)
+      .to({}, { duration: 0.04 }, 0.96);
   }
 
   /* ---------- Services ---------- */
