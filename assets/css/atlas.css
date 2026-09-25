@@ -27,12 +27,15 @@
   --t-lead: clamp(1.1875rem, 1.05rem + 0.45vw, 1.5rem); /* 19 → 24 */
   --t-h3: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);       /* 24 → 36 */
   --t-h2: clamp(2.25rem, 1.3rem + 3.4vw, 4.5rem);     /* 36 → 72 */
-  --t-d1: clamp(3.4rem, 0.6rem + 7.6vw, 9rem);        /* 54 → 144 */
+  /* 54 → 144; the min() floor lets it shrink on 320–360px phones instead of clipping */
+  --t-d1: clamp(min(3.4rem, 13.5vw), 0.6rem + 7.6vw, 9rem);
 
   /* Space: 8px grid */
   --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 48px;
   --s6: 64px; --s7: 96px; --s8: 128px; --s9: 160px;
-  --gutter: clamp(16px, 4vw, 56px);
+  /* Side margin: never under 20px, never over 56px, and always clear of the
+     notch / rounded corners when an iPhone is held sideways */
+  --gutter: max(clamp(20px, 5vw, 56px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --max: 1320px;
   --section: clamp(96px, 14vh, 168px);
 
@@ -47,8 +50,11 @@
 
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-/* scroll-padding keeps keyboard focus clear of the fixed nav */
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 96px; }
+/* scroll-padding keeps keyboard focus clear of the fixed nav.
+   overflow-x: clip is the safety net against sideways overflow: anything that
+   pokes past the edge makes phones zoom the whole page out. clip (not hidden)
+   creates no scroll container, so the sticky and pinned sections keep working. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 96px; overflow-x: clip; }
 /* <i> is only used for decorative shapes; upright stops an italic font download */
 i { font-style: normal; }
 html.lenis, html.lenis body { height: auto; }
@@ -698,7 +704,11 @@ html:not(.js) .fan__phone:nth-child(3) { transform: translateX(62%) rotate(9deg)
   display: flex; align-items: center; gap: var(--gap);
   padding-inline: var(--gutter); width: max-content;
 }
-.work__track { display: flex; align-items: center; gap: var(--gap); outline-offset: -4px; }
+/* position: relative matters. Without it, absolutely positioned children
+   (the screen-reader "opens in a new tab" labels) take .work__pin as their
+   containing block, escape this strip's sideways scroll, and widen the whole
+   page to ~2900px on phones, which makes mobile browsers zoom out. */
+.work__track { position: relative; display: flex; align-items: center; gap: var(--gap); outline-offset: -4px; }
 .work__intro { flex: 0 0 min(500px, 84vw); padding-right: var(--s5); }
 .work__hint { display: none; }
 .work__title {
