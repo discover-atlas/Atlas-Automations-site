@@ -1,0 +1,13 @@
+# Tooling
+node_modules/
+.vercel
+
+# Local Claude Code preview config
+.claude/
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+desktop.ini
+.vscode/
+.idea/
