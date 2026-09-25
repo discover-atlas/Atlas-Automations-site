@@ -120,8 +120,8 @@
 <section class="story" id="story" aria-labelledby="story-title">
   <h2 class="vh" id="story-title">How one customer finds you, and what happens next</h2>
 
-  <div class="story__stage" aria-hidden="true">
-    <div class="story__device">
+  <div class="story__stage">
+    <div class="story__device" aria-hidden="true">
       <div class="phone phone--story" data-tone="dark">
         <div class="phone__screen">
           <div class="phone__status">
@@ -233,6 +233,9 @@
         <div class="scrub__ticks"><span>07:42</span><span>07:44</span><span>07:45</span><span>09:00</span></div>
       </div>
     </div>
+    <!-- Portrait phones: main.js copies each chapter's text in here as a caption
+         under the phone. The originals below stay in the page for screen readers. -->
+    <div class="story__captions" aria-hidden="true"></div>
   </div>
 
   <div class="story__chapters">

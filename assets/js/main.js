@@ -14,6 +14,11 @@
 
   if (!hasGSAP) root.classList.remove("js");
 
+  // Portrait phones get their own layout for the hero, story and load scenes;
+  // laptops, tablets and landscape phones keep the original design.
+  var PORTRAIT = "(max-width: 900px) and (orientation: portrait)";
+  var isPortrait = function () { return window.matchMedia(PORTRAIT).matches; };
+
   /* ------------------------------------------------------------------
      Smooth scroll
      ------------------------------------------------------------------ */
@@ -74,23 +79,24 @@
   toggle.addEventListener("click", function () { setMenu(!menuOpen, true); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && menuOpen) setMenu(false, true); });
 
-  // In-page links go through Lenis so they glide instead of jumping
-  $$('a[href^="#"]').forEach(function (a) {
-    a.addEventListener("click", function (e) {
-      var id = a.getAttribute("href");
-      if (id === "#main") return;
-      var el = id === "#top" ? document.body : $(id);
-      if (!el) return;
-      e.preventDefault();
-      if (menuOpen) setMenu(false);
-      scrollToTarget(el);
-      // replace, not push: Lenis owns scrolling, so Back couldn't restore position anyway
-      if (history.replaceState) history.replaceState(null, "", id === "#top" ? location.pathname + location.search : id);
-      if (el !== document.body) {
-        el.setAttribute("tabindex", "-1");
-        el.focus({ preventScroll: true });
-      }
-    });
+  // In-page links go through Lenis so they glide instead of jumping.
+  // Delegated, so links created later (the story captions) behave the same.
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute("href");
+    if (id === "#main" || id === "#") return;
+    var el = id === "#top" ? document.body : $(id);
+    if (!el) return;
+    e.preventDefault();
+    if (menuOpen) setMenu(false);
+    scrollToTarget(el);
+    // replace, not push: Lenis owns scrolling, so Back couldn't restore position anyway
+    if (history.replaceState) history.replaceState(null, "", id === "#top" ? location.pathname + location.search : id);
+    if (el !== document.body) {
+      el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
+    }
   });
 
   /* ------------------------------------------------------------------
@@ -163,6 +169,24 @@
   var current = null;
   var timers = [];
 
+  // Portrait phones: the chapter text used to scroll over the phone and hide
+  // it. Instead, each chapter's card is copied into a caption area under the
+  // phone and cross-faded as the chapters change. The originals stay in the
+  // page (visually hidden on portrait) so screen readers still get them.
+  var captionBox = $(".story__captions");
+  var captions = [];
+  if (captionBox && chapters.length) {
+    chapters.forEach(function (ch) {
+      var card = $(".chapter__card", ch).cloneNode(true);
+      card.className = "caption";
+      $$("a", card).forEach(function (a) { a.setAttribute("tabindex", "-1"); });
+      $$("[id]", card).forEach(function (el) { el.removeAttribute("id"); });
+      captionBox.appendChild(card);
+      captions.push(card);
+    });
+    story.classList.add("story--captions");
+  }
+
   function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
   function clearTimers() { timers.forEach(clearTimeout); timers = []; }
 
@@ -195,7 +219,10 @@
     if (current === ch) return;
     current = ch;
     clearTimers();
-    chapters.forEach(function (c) { c.classList.toggle("is-current", c === ch); });
+    chapters.forEach(function (c, i) {
+      c.classList.toggle("is-current", c === ch);
+      if (captions[i]) captions[i].classList.toggle("is-current", c === ch);
+    });
 
     var time = ch.dataset.time;
     clocks.forEach(function (c) { c.textContent = time; });
@@ -294,12 +321,21 @@
         .to({}, { duration: 0.14 });
     });
 
-    mm.add("(max-width: 900px)", function () {
+    mm.add("(max-width: 900px) and (orientation: landscape)", function () {
       gsap.timeline({ scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.6 } })
         .to(".hero .mark__half--l", { x: -140, ease: "none" }, 0)
         .to(".hero .mark__half--r", { x: 140, ease: "none" }, 0)
         .to(".hero .mark__sqwrap", { y: -90, autoAlpha: 0, ease: "none" }, 0)
         .to(".hero__content", { y: -80, ease: "none" }, 0);
+    });
+
+    // Portrait: the mark sits above the headline, so only the mark moves.
+    // Its halves part and fade as it scrolls away; the text stays put.
+    mm.add(PORTRAIT, function () {
+      gsap.timeline({ scrollTrigger: { trigger: ".hero__mark", start: "top 12%", end: "bottom top", scrub: 0.6 } })
+        .to(".hero .mark__half--l", { x: -90, autoAlpha: 0.2, ease: "none" }, 0)
+        .to(".hero .mark__half--r", { x: 90, autoAlpha: 0.2, ease: "none" }, 0)
+        .to(".hero .mark__sqwrap", { y: -70, autoAlpha: 0, ease: "none" }, 0);
     });
   }
 
@@ -380,7 +416,10 @@
     var k = function () { return W() / 560; };
     var chipH = function () { return chips[0].offsetHeight; };
     // centre of card i when stacked on the bar (scene centre is 0,0)
-    var pileY = function (i) { return you.offsetTop - H() / 2 - chipH() / 2 - 3 - i * (chipH() + 3); };
+    // cards overlap a little on portrait so the tower stays inside the scene
+    var stepY = function () { return isPortrait() ? chipH() * 0.78 : chipH() + 3; };
+    var pileY = function (i) { return you.offsetTop - H() / 2 - chipH() / 2 - 3 - i * stepY(); };
+    var dropFrom = function () { return isPortrait() ? 120 : 260; };
     var angle = function (el) { return parseFloat(el.style.getPropertyValue("--a")) * Math.PI / 180; };
     var ring = function (prop) { return parseFloat(getComputedStyle(scene).getPropertyValue(prop)); };
 
@@ -399,7 +438,7 @@
     // Act 1: the pile
     chips.forEach(function (c, i) {
       tl.fromTo(c,
-        { x: function () { return jitterX[i] * k(); }, y: function () { return pileY(i) - 260; }, rotation: 0, autoAlpha: 0 },
+        { x: function () { return jitterX[i] * k(); }, y: function () { return pileY(i) - dropFrom(); }, rotation: 0, autoAlpha: 0 },
         { y: function () { return pileY(i); }, rotation: jitterR[i], autoAlpha: 1, duration: 0.06, ease: "power2.in" },
         0.03 + i * 0.04);
     });
@@ -434,7 +473,7 @@
     // Fan: three phones start stacked and spread as the section arrives
     var fan = $$(".fan__phone");
     if (fan.length === 3) {
-      var spread = function () { return window.innerWidth <= 760 ? 46 : 62; };
+      var spread = function () { return isPortrait() ? 40 : window.innerWidth <= 760 ? 46 : 62; };
       var tl = gsap.timeline({
         defaults: { ease: "power3.out" },
         scrollTrigger: { trigger: ".fan", start: "top 85%", end: "center 55%", scrub: 1, invalidateOnRefresh: true }
@@ -570,7 +609,8 @@
     };
     gsap.timeline({
       scrollTrigger: {
-        trigger: finale, start: "top 90%", end: "center 60%", scrub: 1,
+        trigger: finale, start: "top 90%", end: function () { return isPortrait() ? "top 35%" : "center 60%"; }, scrub: 1,
+        invalidateOnRefresh: true,
         onLeave: lock,
         onUpdate: function (self) { if (self.progress > 0.995) lock(); },
         onEnterBack: function () { finale.classList.remove("is-locked"); }
