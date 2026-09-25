@@ -33,23 +33,25 @@ Then open http://localhost:8090. Use the server rather than double-clicking `ind
 
 ## Brand tokens
 
-The colour is graded like a film: cool teal and warm orange, on true neutrals.
-Keep neutrals neutral. The first version tinted the backgrounds and text with
-the brand teal, and the whole page read as one flat cyan.
+Colour blocks: the logo's colours only, used as bold solid sections on true
+neutrals. Keep neutrals neutral. The first version tinted the backgrounds and
+text with the brand teal, and the whole page read as one flat cyan.
 
 ```
---abyss    #131416   page background (graphite, from the logo's #151515 backdrop)
---foam     #F5EFE6   warm white text on dark
---haze     #A69F95   warm grey secondary text
---petrol   #0389A6   logo, left half (sampled from Atlas logo.jpeg)
---signal   #04D8D9   logo, right half: buttons, links, automation visuals
---ember    #FF7A33   warm key light: story times, process steps, glows
---daylight #F6F5F3   light sections: services, process, FAQ
+--abyss       #151515   page background (the logo's own backdrop)
+--foam        #F5F5F5   text on dark
+--haze        #A3A3A3   secondary text on dark
+--petrol      #0389A6   logo, left half (sampled from Atlas logo.jpeg)
+--signal      #04D8D9   logo, right half: buttons, links, the manifesto field
+--petrol-deep #026A80   the process section field
+--daylight    #FFFFFF   white fields: services, FAQ
 ```
 
-Rule of thumb: **teal is the brand and the machine; ember is people and moments.**
-The page alternates dark (hero, story, manifesto) → light (services) → dark (work)
-→ light (process, FAQ) → dark (finale).
+Page rhythm: charcoal (hero, story) → teal (manifesto) → white (services)
+→ charcoal (work) → petrol (process) → white (FAQ) → charcoal (finale).
+
+The previous teal-and-orange "film grade" version is commit `09abb92` if you
+ever want it back: `git checkout 09abb92 -- assets/css/atlas.css`.
 
 Type is **Archivo** throughout, used at different widths: titles at 125% width, weight 800; timestamps at 125% width, weight 200; body text at normal width.
 
