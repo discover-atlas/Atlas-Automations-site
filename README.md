@@ -33,13 +33,23 @@ Then open http://localhost:8090. Use the server rather than double-clicking `ind
 
 ## Brand tokens
 
+The colour is graded like a film: cool teal and warm orange, on true neutrals.
+Keep neutrals neutral. The first version tinted the backgrounds and text with
+the brand teal, and the whole page read as one flat cyan.
+
 ```
---abyss   #041419   page background (petrol-tinted black)
---petrol  #0389A6   logo, left half (sampled from Atlas logo.jpeg)
---signal  #04D8D9   logo, right half, and all CTAs
---foam    #E6F5F4   text on dark
---daylight #EAF4F3  the process + FAQ section
+--abyss    #131416   page background (graphite, from the logo's #151515 backdrop)
+--foam     #F5EFE6   warm white text on dark
+--haze     #A69F95   warm grey secondary text
+--petrol   #0389A6   logo, left half (sampled from Atlas logo.jpeg)
+--signal   #04D8D9   logo, right half: buttons, links, automation visuals
+--ember    #FF7A33   warm key light: story times, process steps, glows
+--daylight #F6F5F3   light sections: services, process, FAQ
 ```
+
+Rule of thumb: **teal is the brand and the machine; ember is people and moments.**
+The page alternates dark (hero, story, manifesto) → light (services) → dark (work)
+→ light (process, FAQ) → dark (finale).
 
 Type is **Archivo** throughout, used at different widths: titles at 125% width, weight 800; timestamps at 125% width, weight 200; body text at normal width.
 
