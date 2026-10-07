@@ -1088,15 +1088,22 @@ html:not(.js) .fan__phone:nth-child(3) { transform: translateX(62%) rotate(9deg)
   .caption .chapter__link { margin-top: 2px; }
   .caption .chapter__link a:only-child { padding-block: 8px; }
 
-  /* Load: the scene takes the full width and a share of the height, so the
-     final ring is a wide oval with room between the cards */
-  .load--animate .load__inner { gap: var(--s3); }
+  /* Load: the headline is anchored near the top (no empty band above it),
+     and the scene below takes the full width and the rest of the height.
+     The ring is a tall oval sized so every card keeps ~20px from the screen
+     edge and clear space from its neighbours. */
+  .load--animate .load__inner { align-content: start; gap: var(--s4); padding-top: 88px; }
+  .load--animate .load__line { align-self: start; }
   .load__scene {
     width: 100%; aspect-ratio: auto;
-    height: min(44vh, 100vw - 40px); height: min(44svh, 100vw - 40px);
-    --rx: 0.34; --ry: 0.37;
+    height: clamp(220px, calc(100vh - 330px), 380px); height: clamp(220px, calc(100svh - 330px), 380px);
+    --rx: 0.33; --ry: 0.40;
   }
-  .load__spokes { transform: scale(0.94, 1.09); }
+  .load__spokes { transform: scale(0.68, 1.18); }   /* lines stop short of the cards */
+  /* smaller cards on phones: the word and its tick, no leading icon */
+  .chip { gap: 5px; padding: 6px 9px; font-size: 0.75rem; border-radius: 8px; }
+  .chip__icon { display: none; }
+  .chip__check { width: 12px; height: 12px; }
 
   /* Services fan: smaller phones that stay inside the screen */
   .fan { min-height: 360px; }

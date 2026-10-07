@@ -68,7 +68,7 @@ The logo mark is rebuilt as an SVG from the supplied JPEG (the two half-hexagons
 
 Everything in this list is a claim a client could hold Atlas to, or a detail only you can confirm:
 
-- **Booking link**: every "Book a call" button goes to `calendly.com/drikusbisschoff/al-agency-discovery-call`. The slug still says "al-agency".
+- **Call buttons**: every call-to-action dials 061 269 1419 (`tel:+27612691419`). Calendly was removed in October 2026; to bring online booking back, swap the `tel:` links for the booking URL.
 - **Email**: `discover@atlasleadsagency.com`, the Atlas Leads domain. Swap it if Atlas Automations gets its own.
 - **VSI permission**: VSI's videos, site and name are used as a case study. Confirm they're happy to be featured.
 - **"13 animated videos"**: counted from the compositions in `vsi-video/src/Root.tsx`.
