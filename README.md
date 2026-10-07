@@ -75,6 +75,6 @@ Everything in this list is a claim a client could hold Atlas to, or a detail onl
 - **FAQ timings**: "one to two weeks" per video and "four to six weeks" per website.
 - **FAQ promises**: "we work across South Africa", "you own everything once paid", and "fixed quote in rand".
 - **Story copy**: "within a minute she has a reply" describes what the automation can do, not a measured result.
-- **VSI hero photo**: the VSI site screenshots include `hero-tower.jpg`, whose licence VSI's own notes list as unconfirmed.
+- **VSI screenshots**: captured from the `vsi-site` project on 7 October 2026 (its launch version). Re-capture them whenever VSI's design changes. The hero photo's licence was confirmed by VSI at launch.
 
 Content deliberately left out: VSI video end cards (they show Jan-Righardt's old mobile number, which VSI's notes say must not be republished) and the "No lecture" line (VSI rejected that phrasing in September 2026).
